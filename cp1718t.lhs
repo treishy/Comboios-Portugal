@@ -987,8 +987,13 @@ allTransactions = cataBlockchain (either (blockTransactions) (uncurry (++) . (bl
 blockTransactions :: Block -> Transactions
 blockTransactions = p2 . p2
 
-ledger = undefined
-isValidMagicNr = undefined
+ledger = map(split (p1.head) (foldr ((+) . p2) (0))) . groupBy(\a b-> fst a == fst b) . cataList (either nil (uncurry (++) . (transactionLedger >< id))) . allTransactions
+transactionLedger :: Transaction -> Ledger
+transactionLedger  = (uncurry (++) . (singl >< singl) . split (id >< (((-1) *) . p1)) (swap . p2))
+
+isValidMagicNr = (uncurry (==)) . split (length) (length . groupBy(==)) . magicNrs
+magicNrs :: Blockchain -> [MagicNo]
+magicNrs = cataBlockchain(either (singl . p1) (uncurry (++) . ((singl . p1) >< id)))
 \end{code}
 
 
