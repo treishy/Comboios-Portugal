@@ -983,7 +983,8 @@ anaBlockchain g = inBlockchain . recBlockchain (anaBlockchain g) . g
 hyloBlockchain h g = cataBlockchain h . anaBlockchain g
 
 
-allTransactions = undefined -- cataBlockchain (either (blockTransactions) ((uncurry (++)) (blockTransactions >< id)))
+allTransactions = cataBlockchain (either (blockTransactions) (uncurry (++) . (blockTransactions >< id )))
+blockTransactions :: Block -> Transactions
 blockTransactions = p2 . p2
 
 ledger = undefined
