@@ -1028,20 +1028,24 @@ outlineQTree = undefined
 \subsection*{Problema 3}
 
 \begin{code}
-base = undefined
-loop = undefined
+base a = (1,1,1,1) --either (split (split(const 1) (const 1)) (split (const 1) (const 1))) ( (split (uncurry(*) . swap) (succ . p2)) >< (split (uncurry(*) . swap) (succ . p2)))
+loop =  (split (mul . swap) (succ . p2) >< split (mul . swap) (succ . p2)) . laux --cataNat
+laux ((a,b),(c,d)) = (a,b,c,d)
 \end{code}
 
 \subsection*{Problema 4}
 
 \begin{code}
-inFTree = undefined
-outFTree = undefined
-baseFTree = undefined
-recFTree = undefined
-cataFTree = undefined
-anaFTree = undefined
-hyloFTree = undefined
+auxf1 b = Unit b
+auxf2 (a,(b,c)) = Comp a b c
+inFTree = either (auxf1) (auxf2)
+outFTree (Unit b) = i1 (b)
+outFTree (Comp a (b) (c) ) = i2 (a,(b,c))
+baseFTree g f j = (f) -|- (g >< (j >< j))
+recFTree f = (id) -|- (id >< (f >< f))
+cataFTree g = g . recFTree (cataFTree g) . outFTree
+anaFTree g = inFTree . recFTree (anaFTree g) . g
+hyloFTree h g = cataFTree h . anaFTree g
 
 instance Bifunctor FTree where
     bimap = undefined
