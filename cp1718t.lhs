@@ -1000,20 +1000,24 @@ magicNrs = cataBlockchain(either (singl . p1) (uncurry (++) . ((singl . p1) >< i
 \subsection*{Problema 2}
 
 \begin{code}
-inQTree = undefined
-outQTree = undefined
-baseQTree = undefined
-recQTree = undefined
-cataQTree = undefined
-anaQTree = undefined
-hyloQTree = undefined
+aux1 (a,(b,c)) = Cell (a) (b) (c)
+aux2 (a,(b,(c,d))) = Block (a) (b) (c) (d)
+inQTree = either aux1 aux2
+outQTree (Cell a b c) = i1 (a, (b, c))
+outQTree (Block b1 b2 b3 b4) = i2 (b1,(b2, (b3, b4)))
+baseQTree g f = (g >< id) -|- (f >< (f >< (f >< f)))
+recQTree f = (id >< id) -|- (f >< (f >< (f >< f)))
+cataQTree g = g . recQTree (cataQTree g) . outQTree
+anaQTree g = inQTree . recQTree (anaQTree g) . g
+hyloQTree h g = cataQTree h . anaQTree g
 
 instance Functor QTree where
-    fmap = undefined
+    fmap f  = inQTree . (baseQTree f (fmap f)) . outQTree
 
-rotateQTree = undefined
-scaleQTree = undefined
-invertQTree = undefined
+rotateQTree = cataQTree (inQTree . (((id >< swap)) -|- (split (p1 . p2 . p2) (split (p1) (split (p2 . p2 . p2) (p1 . p2))))))
+scaleQTree x =cataQTree (inQTree . ((id >< ((x *) >< (x *)) -|- (id))))
+invertQTree = cataQTree (inQTree . (((invertPixel >< (id)) -|- (id))))
+invertPixel (PixelRGBA8 a b c d) = (PixelRGBA8 (255-a) (255-b) (255-c) (255-d))
 compressQTree = undefined
 outlineQTree = undefined
 \end{code}
