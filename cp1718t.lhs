@@ -660,7 +660,7 @@ g 0 = 1
 g (d+1) = underbrace ((d+1)) (s d) * g d
 
 s 0 = 1
-s (d+1) = s n + 1
+s (d+1) = s d + 1
 \end{spec}
 A partir daqui alguém derivou a seguinte implementação:
 \begin{code}
@@ -673,7 +673,7 @@ derive as funções |base k| e |loop| que são usadas como auxiliares acima.
 \begin{propriedade}
 Verificação que |bin n k| coincide com a sua especificação (\ref{eq:bin}):
 \begin{code}
-prop3 n k = (bin n k) == (fac n) % (fac k * (fac ((n-k))))
+prop3 (NonNegative n) (NonNegative k) = k <= n ==> (bin n k) == (fac n) % (fac k * (fac ((n-k))))
 \end{code}
 \end{propriedade}
 
@@ -1016,9 +1016,12 @@ instance Functor QTree where
 
 rotateQTree = cataQTree (inQTree . (((id >< swap)) -|- (split (p1 . p2 . p2) (split (p1) (split (p2 . p2 . p2) (p1 . p2))))))
 scaleQTree x =cataQTree (inQTree . ((id >< ((x *) >< (x *)) -|- (id))))
-invertQTree = cataQTree (inQTree . (((invertPixel >< (id)) -|- (id))))
+invertQTree = fmap (invertPixel) --cataQTree (inQTree . (((invertPixel >< (id)) -|- (id))))
 invertPixel (PixelRGBA8 a b c d) = (PixelRGBA8 (255-a) (255-b) (255-c) (255-d))
-compressQTree = undefined
+compressQTree x q = undefined --co2 (depthQTree (q) - x) q
+-- co2 :: Int -> (QTree a) -> (QTree a)
+-- co2 d = undefined -- inQTree . (id -|- (cond (d==0) (cblock) ((co2 d-1) >< ((co2 d-1)><((co2 d-1)><(co2 d-1)))))) . outQTree
+-- cblock a = Cell (PixelRGBA8 (255) (255) (255) (255)) (1) (1)
 outlineQTree = undefined
 \end{code}
 
@@ -1306,7 +1309,7 @@ invertBMP :: FilePath -> FilePath -> IO ()
 invertBMP from to = withBMP from to invertbm
 
 depthQTree :: QTree a -> Int
-depthQTree = cataQTree (either (const 0) f)
+depthQTree = cataQTree (either (const 0) ((1+). f))
     where f (a,(b,(c,d))) = maximum [a,b,c,d]
 
 compressbm :: Eq a => Int -> Matrix a -> Matrix a
