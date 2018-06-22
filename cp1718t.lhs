@@ -674,6 +674,7 @@ derive as funções |base k| e |loop| que são usadas como auxiliares acima.
 Verificação que |bin n k| coincide com a sua especificação (\ref{eq:bin}):
 \begin{code}
 prop3 (NonNegative n) (NonNegative k) = k <= n ==> (bin n k) == (fac n) % (fac k * (fac ((n-k))))
+
 \end{code}
 \end{propriedade}
 
@@ -1028,9 +1029,10 @@ outlineQTree = undefined
 \subsection*{Problema 3}
 
 \begin{code}
-base a = (1,1,1,1) --either (split (split(const 1) (const 1)) (split (const 1) (const 1))) ( (split (uncurry(*) . swap) (succ . p2)) >< (split (uncurry(*) . swap) (succ . p2)))
-loop =  (split (mul . swap) (succ . p2) >< split (mul . swap) (succ . p2)) . laux --cataNat
-laux ((a,b),(c,d)) = (a,b,c,d)
+base k = (1,k+1,1,1) 
+loop  = unpair . ((split (mul) (succ.p2)) >< (split (mul) (succ.p2))) . pair --(a * b,b+1,c*d,d+1) 
+pair (a,b,c,d) = ((a,b),(c,d))
+unpair((a,b),(c,d)) = (a,b,c,d)
 \end{code}
 
 \subsection*{Problema 4}
