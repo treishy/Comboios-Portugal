@@ -1023,6 +1023,10 @@ compressQTree x q = undefined --co2 (depthQTree (q) - x) q
 -- co2 :: Int -> (QTree a) -> (QTree a)
 -- co2 d = undefined -- inQTree . (id -|- (cond (d==0) (cblock) ((co2 d-1) >< ((co2 d-1)><((co2 d-1)><(co2 d-1)))))) . outQTree
 -- cblock a = Cell (PixelRGBA8 (255) (255) (255) (255)) (1) (1)
+
+outQTreeDepth = (outQTree) >< id
+recQTreeDepth f = ((id >< id) -|- (f >< (f >< (f >< f)))) >< pred
+cataQTreeDepth g = undefined--g . (recQTreeDepth (cataQTreeDepth g)) . outQTreeDepth
 outlineQTree = undefined
 \end{code}
 
