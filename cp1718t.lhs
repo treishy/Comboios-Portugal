@@ -1150,11 +1150,11 @@ instance Bifunctor FTree where
     bimap f g = inFTree . (baseFTree f g (bimap f g)) . outFTree
 
 generatePTree = anaFTree (cond (== 0) (i1 . calculateSize) (i2 . split (calculateSize) (split (pred) (pred)))) 
-calculateSize = uncurry (**) . split (const (sqrt (2.0)/2.0)) ((1 -). toFloat . id)
+calculateSize = (50 *) . uncurry (**) . split (const (sqrt (2.0)/2.0)) ((1 -). toFloat . id)
 drawPTree =  cataFTree(either (singl.square) (uncurry (++) . split (p2.p2)(singl.pictures . cons . split (square . p1) (uncurry (++) . split (singl . leftSide) (singl.rightSide)))))
 
-leftSide = (rotate (45)) . uncurry(uncurry (translate)) . split (split (p1) (p1)) (head.p1.p2)
-rightSide = (rotate (45)) . uncurry(uncurry (translate)) . split (split (p1) (p1)) (head.p2.p2)
+leftSide = (rotate (-45)) . uncurry(uncurry (translate)) . split (split (((-1 / 2) *) . p1) (p1)) (head.p1.p2)
+rightSide = (rotate (45)) . uncurry(uncurry (translate)) . split (split (((1 / 2) *) . p1) (p1)) (head.p2.p2)
 
 \end{code}
 
