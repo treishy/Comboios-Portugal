@@ -1143,6 +1143,7 @@ Diagram 2.2:
            \ar[l]^-{|g= inQTree . [i1 . (id >< ((x *) >< (x *))), i2.id] |}
 }
 \end{eqnarray*}
+Para a funcão invertQTree utilizamos apenas o fmap de modo a aplicar "invertPixel" a todos os pontos.
 
 \subsection*{Problema 3}
 
