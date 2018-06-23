@@ -1024,9 +1024,7 @@ compressQTree x q = undefined --co2 (depthQTree (q) - x) q
 -- co2 d = undefined -- inQTree . (id -|- (cond (d==0) (cblock) ((co2 d-1) >< ((co2 d-1)><((co2 d-1)><(co2 d-1)))))) . outQTree
 -- cblock a = Cell (PixelRGBA8 (255) (255) (255) (255)) (1) (1)
 
-outQTreeDepth = (outQTree) >< id
-recQTreeDepth f = ((id >< id) -|- (f >< (f >< (f >< f)))) >< pred
-cataQTreeDepth g = g . (recQTreeDepth (cataQTreeDepth g)) . outQTreeDepth
+
 outlineQTree = undefined
 \end{code}
 
@@ -1056,7 +1054,7 @@ hyloFTree h g = cataFTree h . anaFTree g
 instance Bifunctor FTree where
     bimap f g = inFTree . (baseFTree f g (bimap f g)) . outFTree
 
-generatePTree = undefined
+generatePTree = anaFTree (cond (== 0) (i1 . (5*) . uncurry (**) . split (const (sqrt (2.0)/2.0)) ((5 -). toFloat . id)) (i2 .split( (5*) . uncurry (**) . split (const (sqrt (2.0)/2.0)) ((5 -). toFloat . id)) (split (pred) (pred)))) 
 drawPTree = undefined
 \end{code}
 
