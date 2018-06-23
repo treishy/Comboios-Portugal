@@ -1099,7 +1099,7 @@ invertPixel (PixelRGBA8 a b c d) = (PixelRGBA8 (255-a) (255-b) (255-c) (255-d))
 compressQTree x q = undefined
 outlineQTree f = qt2bmOutline . fmap f
 qt2bmOutline = cataQTree (either f g) where
-    f (k,(i,j)) = mapPos(\(r,c) a -> (cond(/=j)(cond(/=k) (const 0) (a)) (a))) . (matrix j i (const k))
+    f (k,(i,j)) = mapPos(\(r,c) a -> if r/=j && c/=i then False else a) (matrix j i (const k))
     g (a,(b,(c,d))) = (a <|> b) <-> (c <|> d)
 
 \end{code}
