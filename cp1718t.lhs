@@ -1000,7 +1000,7 @@ magicNrs = cataBlockchain(either (singl . p1) (uncurry (++) . ((singl . p1) >< i
 Diagrama 1.1:
 \begin{itemize}
 \item allTransactions é o catamorfismo de g
-\item BlockTransactions é equivalente á composição da projeção do 2º elemento 2 vezes 
+\item BlockTransactions é equivalente á composição da projeção do 2º elemento 2 vezes
 \end{itemize}
 
 
@@ -1013,7 +1013,7 @@ Diagrama 1.1:
     |Block + (Block >< Blockchain)|
            \ar[d]^{|id + id >< cataNat g|}
 \\
-     |Transactions| 
+     |Transactions|
 &
      |Block + (Block >< Transactions)|
            \ar[l]^-{|g = [BlockTransactions, uncurry(++) (BlockTransactions >< id)]|}
@@ -1030,7 +1030,7 @@ Diagrama 1.2.1:
     |1 + (Transactions >< Transactions)|
            \ar[d]^{|id + id >< cataNat g|}
 \\
-     |(Entity,Value)*| 
+     |(Entity,Value)*|
 &
      |1 + (Transactions >< (Entity,Value)*)|
            \ar[l]^-{|g = [nil,uncurry(++) . (transactionLedger >< id) ]|}
@@ -1046,7 +1046,7 @@ Diagrama 1.2.2:
     |((Entity,Value)*)*|
            \ar[d]^{|map(split (p1.head) (foldr ((+) . p2) (0))) |}
 \\
-    |(Entity,Value)*| 
+    |(Entity,Value)*|
 }
 \end{eqnarray*}
 
@@ -1060,7 +1060,7 @@ Diagrama 1.3:
     |Block + (Block >< Blockchain)|
            \ar[d]^{|id + id >< magicNrs|}
 \\
-     |MagicNo*| 
+     |MagicNo*|
            \ar[d]^{|split (length) (length . groupBy(= =))|}
 &
      |Block + (Block >< (MagicNo)*)|
@@ -1093,13 +1093,15 @@ instance Functor QTree where
 
 rotateQTree = cataQTree (inQTree . (((id >< swap)) -|- (split (p1 . p2 . p2) (split (p1) (split (p2 . p2 . p2) (p1 . p2))))))
 scaleQTree x =cataQTree (inQTree . ((id >< ((x *) >< (x *)) -|- (id))))
-invertQTree = fmap (invertPixel) 
+invertQTree = fmap (invertPixel)
 invertPixel (PixelRGBA8 a b c d) = (PixelRGBA8 (255-a) (255-b) (255-c) (255-d))
+
 compressQTree x q = undefined 
 outlineQTree f = qt2bmOutline . fmap f
 qt2bmOutline = cataQTree (either f g) where
     f (k,(i,j)) = mapPos(\(r,c) a -> cond(/=j)(cond(/=k) (False) (a)) (a)) . matrix j i (const k)
     g (a,(b,(c,d))) = (a <|> b) <-> (c <|> d)
+
 \end{code}
 
 Diagram 2.1:
@@ -1116,7 +1118,7 @@ Diagram 2.1:
     |A+Int><Int+B|
            \ar[d]^{|id><id+aux|}
 \\
-     |QTree A| 
+     |QTree A|
 &
      |A+Int><Int+B|
            \ar[l]^-{|g=inQTree.[i1.id><swap,i2.split(p1.p2.p2)(split(p1)(split(p2.p2. p2)(p1.p2)))]|}
@@ -1137,12 +1139,13 @@ Diagram 2.2:
     |A+Int><Int+D|
            \ar[d]^{|id><id+aux|}
 \\
-     |QTree A| 
+     |QTree A|
 &
      |A+Int><Int+D|
            \ar[l]^-{|g= inQTree . [i1 . (id >< ((x *) >< (x *))), i2.id] |}
 }
 \end{eqnarray*}
+Para a funcão invertQTree utilizamos apenas o fmap de modo a aplicar "invertPixel" a todos os pontos.
 
 \subsection*{Problema 3}
 
@@ -1153,6 +1156,193 @@ pair (a,b,c,d) = ((a,b),(c,d))
 unpair((a,b),(c,d)) = (a,b,c,d)
 \end{code}
 
+Cálculo:
+\begin{eqnarray*}
+\start
+%
+|lcbr(
+S 0 = 1
+)(
+S (d+1) = S d + 1
+)|
+\just\equiv{ Def Cons Def Succ }
+%
+        |lcbr(
+   S .const 0 = const 1
+ )(
+   S . succ = succ . S
+ )|
+%
+\just\equiv{ Eq }
+%
+  |either (S . const 0) (S . succ) = either (const 1) (succ . S)|
+%
+\just\equiv{ Fusao e Natural Id }
+%
+ |S . in = either (const 1 . id) (Succ . S)|
+%
+  \just\equiv{Cancelamento Absorcao }
+%
+  |S . in = either (const 1) (Succ . p2) . (id + split (g) (s)) |
+\qed
+\end{eqnarray*}
+
+
+
+\begin{eqnarray*}
+\start
+%
+|lcbr(
+g . in = either (const 1) (mul) . F (split (s) (q))
+)(
+s . in = either (const 1) (succ . p2) . F(split (q) (s))
+)|
+\just\equiv{ Fokkinga }
+%
+        |split g s = cataNat (split(either (const 1) (mul))(either (const 1) (Succ . p2)))|
+%
+\qed
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\start
+%
+|lcbr(
+S 0 = 1
+)(
+S (d+1) = S d + 1
+)|
+\just\equiv{ Def Cons Def Succ }
+%
+        |lcbr(
+   S .const 0 = const 1
+ )(
+   S . succ = succ . S
+ )|
+%
+\just\equiv{ Eq }
+%
+  |either (S . const 0) (S . succ) = either (const 1) (succ . S)|
+%
+\just\equiv{ Fusao e Natural Id }
+%
+ |S . in = either (const 1 . id) (Succ . S)|
+%
+  \just\equiv{Cancelamento Absorcao }
+%
+  |S . in = either (const 1) (Succ . p2) . (id + split (g) (s)) |
+\qed
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\start
+%
+|lcbr(
+f k 0 = 1
+)(
+f k (d+1) = (d + k + 1) * (f k d)
+)|
+\just\equiv{  }
+%
+        |lcbr(
+   f k .const 0 = const 1
+ )(
+   f k . succ = mul . split (l k) (f k)
+ )|
+%
+\just\equiv{ Comutatividade da Multiplicacao }
+%
+|lcbr(
+f k .const 0 = const 1
+)(
+f k . succ = mul . split (f k) (l k)
+)|
+%
+\just\equiv{ Eq Fusao e Natural Id}
+%
+ |f k . in = either (const 1 . id) (mul . split (f k) (l k))|
+%
+  \just\equiv{ Absorcao }
+%
+  |fk . in = either (const 1) (mul) . F(split (f k) (l k)) |
+\qed
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\start
+%
+|lcbr(
+l k 0 = k + 1
+)(
+l k (d+1) = (l k d) + 1
+)|
+\just\equiv{ Def const  }
+%
+        |lcbr(
+   l k . const 0 = Succ . k
+ )(
+   l k . Succ = Succ . l k
+ )|
+%
+\just\equiv{ Eq, Natural Id, Cancelamento, Fusao }
+%
+|l k . in = either (Succ . k . id) (Succ . p2 . split (fk) (lk))|
+%
+\just\equiv{ Absorcao, Def Functor}
+%
+ |l k . in = either (Succ . k) (Succ . p2) . F(split (fk) (lk))|
+
+\qed
+
+\begin{eqnarray*}
+\start
+%
+|lcbr(
+fk . in = either (const 1) (mul) . F(split(fk) (lk))
+)(
+fk . in = either (Succ . const K) (Succ . p2) . F(split(fk) (lk))
+)|
+\just\equiv{ Fokkinga }
+%
+  |split (fk) (lk) = cataNat (either (either (const 1) (mul)) (either (Succ . const K) (Succ . p2)))|
+
+\qed
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\start
+%
+|split (cataNat (split(either(const 1) (mul))(either (Succ . const K) (Succ . p2)))) (cataNat(split (either (const 1) (mul)) (either (const 1) (succ . p2))))|
+%
+\just\equiv{ bananaSplit }
+%
+  |cataNat(split (either (const 1) (mul))(either (Succ . const K) (Succ . p2)) >< split(either (const 1) (mul))(either (Succ . const K) (Succ . p2)) . split (id + p1) (id + p2) )|
+%
+\just\equiv{ Absorcao }
+%
+  |cataNat(split(split (either (const 1) (mul))(either (Succ . const K) (Succ . p2)) . (id + p1))(split (either (const 1) (mul)) (either (const 1) (Succ . p2)) . (id + p2)))|
+%
+\just\equiv{ Lei da Troca , Lei da Troca}
+%
+  |cataNat(split (either (split (const 1) (Succ . const K)) (split (mul) (Succ . p2)). (id + p1)) (either (split (const 1) (const 1)) (split (mul) (Succ . p2)) . (id + p2) ) )|
+%
+\just\equiv{ Absorcao x2 , Natura ID x2}
+%
+  |cataNat(split (either (split (const 1)(Succ . const K))(split (mul)(Succ . p2) . p1))(either (split (const 1)(const 1))(split (mul)(Succ . p2) . p2)))|
+%
+\just\equiv{ Lei da Troca}
+%
+  |cataNat(either (split (split(const 1) (Succ . const K))(split (const 1) (const 1)))(split (split (mul) (Succ .  p2) . p1) (split (mul) (Succ . p2) . p2))|
+%
+\just\equiv{ Def x , Fusao, Const}
+%
+  |cataNat(either (split (split(const 1) (Succ . const K))(split (const 1) (const 1)))(split(mul) (Succ .  p2) >< (split (mul) (Succ . p2)))|
+
+\qed
+\end{eqnarray*}
+
+|Como (for a b) = cataNat(either (const b) (const a))|
+Sendo a = loop e b = base k, e visto que a funcão recebe e devolve par de pares, mas a funcão original requer tuplos de 4 elementos, foi necessário recorrer às funcões pair e unpair para alternar entre duas estruturas isomórficas.
 \subsection*{Problema 4}
 
 \begin{code}
@@ -1170,8 +1360,8 @@ hyloFTree h g = cataFTree h . anaFTree g
 instance Bifunctor FTree where
     bimap f g = inFTree . (baseFTree f g (bimap f g)) . outFTree
 
-generatePTree = anaFTree (cond (== 0) (i1 . calculateSize) (i2 . split (calculateSize) (split (pred) (pred)))) 
-calculateSize = (50 *) . uncurry (**) . split (const (sqrt (2.0)/2.0)) ((1 -). toFloat . id)
+generatePTree = anaFTree (cond (== 0) (i1 . calculateSize) (i2 . split (calculateSize) (split (pred) (pred))))
+calculateSize = (10 *) . uncurry (**) . split (const (sqrt (2.0)/2.0)) ((1 -). toFloat . id)
 drawPTree =  cataFTree(either (singl.square) (uncurry (++) . split (p2.p2)(singl.pictures . cons . split (square . p1) (uncurry (++) . split (singl . leftSide) (singl.rightSide)))))
 
 leftSide = uncurry(uncurry (translate)) . split (split (((-1 / 2) *) . p1) (p1)) ((rotate (-45)) . last . p1. p2)
@@ -1182,12 +1372,12 @@ rightSide = uncurry(uncurry (translate)) . split (split (((1 / 2) *) . p1) (p1))
 Diagram 4.1:
 \begin{eqnarray*}
 \xymatrix@@C=7cm{
-    |FTree R R|    
+    |FTree R R|
 &
     |1 + R >< (FTree R R  >< FTree R R)|
            \ar[l]^-{|in|}
 \\
-     |Z| 
+     |Z|
            \ar[u]_-{|generatorPTree|}
            \ar[r]^-{|(0 = =) --> (i1 . calculateSize),(i2 . split (calculateSize)(split (pred)(pred)) |}
 &
@@ -1195,6 +1385,97 @@ Diagram 4.1:
            \ar[u]^{|F generatorPTree|}
 }
 \end{eqnarray*}
+
+Diagram 4.2.1:
+\begin{itemize}
+  \item $aux = uncurry (++) . split (p2 . p2) (singl . pictures . cons . split (square . p1) (uncurry (++) . $\\
+  $split (singl . leftSide) (singl . rightSide)))$
+  \item drawTree será o catamorfismo mostrado acima. O segundo elemento do either aux é explicado com maior detalhe a seguir.
+\end{itemize}
+\begin{eqnarray*}
+\xymatrix@@C=7cm{
+    |FTree R R|
+      \ar[r]^-{|out|}
+      \ar[d]_-{|drawPTree|}
+&
+    |R + R >< (FTree R R  >< FTree R R)|
+           \ar[d]^-{|F drawPTree|}
+\\
+     |Picture*|
+&
+     |R + R >< (Picture* >< Picture*)|
+           \ar[l]^-{|[singl.square,aux]|}
+}
+\end{eqnarray*}
+
+Diagram 4.2.2 :: como é calculado e posicionada a picture da metade esquerda (leftSide):
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |R >< (Picture* >< Picture*) |
+      \ar[d]_-{|split((-1/2*).p1)(p1)|}
+      &
+\\
+     |R >< R|
+     &
+}
+\end{eqnarray*}
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |R >< (Picture* >< Picture*) |
+      \ar[d]_-{|(rotate(-45)).last.p1.p2|}
+      &
+\\
+     |R >< R|
+     &
+}
+\end{eqnarray*}
+Fazendo o split das duas operações acima, obtemos :  (R \times R) \times Picture. A seguir aplicamos a translação : 
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |R >< R >< Picture |
+      \ar[d]_-{|uncurry(uncurry(translate))|}
+      &
+\\
+     |Picture|
+     &
+}
+\end{eqnarray*}
+Obtemos assim a imagem do ponto que vai ser colocado sobre a esquerda da figura da árvore em que nos encontramos. e consequentemente a definição da função leftSide. Para a função rightSide, os passos são identicos, mas o translate usa o valor simétrico na componente x e o rotate usa também o valor simétrico.
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    | R >< (Picture* >< Picture*) |
+      \ar[d]_-{|uncurry (++) . split (singl.leftSide) (singl . rightSide)|}
+      &
+\\
+     |Picture*|
+     &
+}
+\end{eqnarray*}
+Dá lista com o lado da esquerda e da direita juntos
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    | R >< (Picture* >< Picture*) |
+      \ar[d]_-{|square . p1|}
+      &
+\\
+     |Picture|
+     &
+}
+\end{eqnarray*}
+Dá o quadrado do nodo atual. Fazendo o split dos dois anteriores obtemos o par com o quadrado do nodo atual centrado e a lista com os lados esquerdo e direito já posicionados, Picture \times [ Picture]
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Picture >< Picture* |
+      \ar[d]_-{|singl . picture . cons|}
+      &
+\\
+     |Picture*|
+     &
+}
+\end{eqnarray*}
+Lista com a imagem completa do nodo atual\\
+De seguida, juntamos a imagem obtida a uma das listas de imagens das árvores abaixo do nodo (que são idênticas, logo tanto faz ser uma como outra)\\
 
 \subsection*{Problema 5}
 
