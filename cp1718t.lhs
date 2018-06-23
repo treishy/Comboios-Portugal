@@ -1384,6 +1384,97 @@ Diagram 4.1:
 }
 \end{eqnarray*}
 
+Diagram 4.2.1:
+\begin{itemize}
+  \item $aux = uncurry (++) . split (p2 . p2) (singl . pictures . cons . split (square . p1) (uncurry (++) . $\\
+  $split (singl . leftSide) (singl . rightSide)))$
+  \item drawTree será o catamorfismo mostrado acima. O segundo elemento do either aux é explicado com maior detalhe a seguir.
+\end{itemize}
+\begin{eqnarray*}
+\xymatrix@@C=7cm{
+    |FTree R R|
+      \ar[r]^-{|out|}
+      \ar[d]_-{|drawPTree|}
+&
+    |R + R >< (FTree R R  >< FTree R R)|
+           \ar[d]^-{|F drawPTree|}
+\\
+     |Picture*|
+&
+     |R + R >< (Picture* >< Picture*)|
+           \ar[l]^-{|[singl.square,aux]|}
+}
+\end{eqnarray*}
+
+Diagram 4.2.2 :: como é calculado e posicionada a picture da metade esquerda (leftSide):
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |R >< (Picture* >< Picture*) |
+      \ar[d]_-{|split((-1/2*).p1)(p1)|}
+      &
+\\
+     |R >< R|
+     &
+}
+\end{eqnarray*}
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |R >< (Picture* >< Picture*) |
+      \ar[d]_-{|(rotate(-45)).last.p1.p2|}
+      &
+\\
+     |R >< R|
+     &
+}
+\end{eqnarray*}
+Fazendo o split das duas operações acima, obtemos :  (R >< R) >< Picture. A seguir aplicamos a translação : 
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |R >< R >< Picture |
+      \ar[d]_-{|uncurry(uncurry(translate))|}
+      &
+\\
+     |Picture|
+     &
+}
+\end{eqnarray*}
+Obtemos assim a imagem do ponto que vai ser colocado sobre a esquerda da figura da árvore em que nos encontramos. e consequentemente a definição da função leftSide. Para a função rightSide, os passos são identicos, mas o translate usa o valor simétrico na componente x e o rotate usa também o valor simétrico.
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    | R >< (Picture* >< Picture*) |
+      \ar[d]_-{|uncurry (++) . split (singl.leftSide) (singl . rightSide)|}
+      &
+\\
+     |Picture*|
+     &
+}
+\end{eqnarray*}
+Dá lista com o lado da esquerda e da direita juntos
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    | R >< (Picture* >< Picture*) |
+      \ar[d]_-{|square . p1|}
+      &
+\\
+     |Picture|
+     &
+}
+\end{eqnarray*}
+Dá o quadrado do nodo atual. Fazendo o split dos dois anteriores obtemos o par com o quadrado do nodo atual centrado e a lista com os lados esquerdo e direito já posicionados, Picture \times [ Picture]
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Picture >< Picture* |
+      \ar[d]_-{|singl . picture . cons|}
+      &
+\\
+     |Picture*|
+     &
+}
+\end{eqnarray*}
+Lista com a imagem completa do nodo atual\\
+De seguida, juntamos a imagem obtida a uma das listas de imagens das árvores abaixo do nodo (que são idênticas, logo tanto faz ser uma como outra)\\
+
 \subsection*{Problema 5}
 
 \begin{code}
