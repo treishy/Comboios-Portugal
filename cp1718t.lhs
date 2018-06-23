@@ -1269,6 +1269,20 @@ l k (d+1) = (l k d) + 1
  |l k . in = either (Succ . k) (Succ . p2) . F(split (fk) (lk))|
 
 \qed
+
+\begin{eqnarray*}
+\start
+%
+|lcbr(
+fk . in = either (const 1) (mul) . F(split(fk) (lk))
+)(
+fk . in = either (Succ . const K) (Succ . p2) . F(split(fk) (lk))
+)|
+\just\equiv{ Fokkinga }
+%
+  |split (fk) (lk) = cata(either (either (const 1) (mul)) (either (Succ . const K) (Succ . p2)))|
+
+\qed
 \end{eqnarray*}
 
 \subsection*{Problema 4}
