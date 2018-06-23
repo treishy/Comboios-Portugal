@@ -1123,6 +1123,27 @@ Diagram 2.1:
 }
 \end{eqnarray*}
 
+Diagram 2.2:
+\begin{itemize}
+  \item $aux = rotateQTree \times (rotateQTree \times (rotateQTree \times rotateQTree))$
+  \item $D = QTree A><(QTree A><(QTree A><QTree A))$
+\end{itemize}
+\begin{eqnarray*}
+\xymatrix@@C=7cm{
+    |QTree A|
+           \ar[d]_-{|scaleQTree|}
+           \ar[r]^-{|out|}
+&
+    |A+Int><Int+D|
+           \ar[d]^{|id><id+aux|}
+\\
+     |QTree A|
+&
+     |A+Int><Int+D|
+           \ar[l]^-{|g= inQTree . [i1 . (id >< ((x *) >< (x *))), i2.id] |}
+}
+\end{eqnarray*}
+
 \subsection*{Problema 3}
 
 \begin{code}
@@ -1326,10 +1347,27 @@ generatePTree = anaFTree (cond (== 0) (i1 . calculateSize) (i2 . split (calculat
 calculateSize = (50 *) . uncurry (**) . split (const (sqrt (2.0)/2.0)) ((1 -). toFloat . id)
 drawPTree =  cataFTree(either (singl.square) (uncurry (++) . split (p2.p2)(singl.pictures . cons . split (square . p1) (uncurry (++) . split (singl . leftSide) (singl.rightSide)))))
 
-leftSide = uncurry(uncurry (translate)) . split (split (((-1 / 2) *) . p1) (p1)) ((rotate (-45)) . head.p1.p2)
-rightSide = uncurry(uncurry (translate)) . split (split (((1 / 2) *) . p1) (p1)) ((rotate (45)) . head.p2.p2)
+leftSide = uncurry(uncurry (translate)) . split (split (((-1 / 2) *) . p1) (p1)) ((rotate (-45)) . last . p1. p2)
+rightSide = uncurry(uncurry (translate)) . split (split (((1 / 2) *) . p1) (p1)) ((rotate (45)) . last . p2 . p2)
 
 \end{code}
+
+Diagram 4.1:
+\begin{eqnarray*}
+\xymatrix@@C=7cm{
+    |FTree R R|
+&
+    |1 + R >< (FTree R R  >< FTree R R)|
+           \ar[l]^-{|in|}
+\\
+     |Z|
+           \ar[u]_-{|generatorPTree|}
+           \ar[r]^-{|(0 = =) --> (i1 . calculateSize),(i2 . split (calculateSize)(split (pred)(pred)) |}
+&
+     |R + R >< (Z >< Z)|
+           \ar[u]^{|F generatorPTree|}
+}
+\end{eqnarray*}
 
 \subsection*{Problema 5}
 
