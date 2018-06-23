@@ -1102,6 +1102,27 @@ compressQTree x q = undefined
 outlineQTree = undefined
 \end{code}
 
+Diagram 2.1:
+\begin{itemize}
+  \item $aux = rotateQTree \times (rotateQTree \times (rotateQTree \times rotateQTree))$
+  \item $B = QTree A><(QTree A><(QTree A><QTree A))$
+\end{itemize}
+\begin{eqnarray*}
+\xymatrix@@C=7cm{
+    |QTree A|
+           \ar[d]_-{|rotateQTree|}
+           \ar[r]^-{|out|}
+&
+    |A+Int><Int+B|
+           \ar[d]^{|id><id+aux|}
+\\
+     |QTree A| 
+&
+     |A+Int><Int+B|
+           \ar[l]^-{|g=inQTree.[i1.id><swap,i2.split(p1.p2.p2)(split(p1)(split(p2.p2. p2)(p1.p2)))]|}
+}
+\end{eqnarray*}
+
 \subsection*{Problema 3}
 
 \begin{code}
