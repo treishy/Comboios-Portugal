@@ -105,13 +105,13 @@
 
 \begin{center}\large
 \begin{tabular}{ll}
-\textbf{Grupo} nr. & 99 (preencher)
+\textbf{Grupo} nr. & 50
 \\\hline
-a11111 & Nome1 (preencher)
+a78867 & Diogo Fernandes
 \\
-a22222 & Nome2 (preencher)
+a78494 & José Dias
 \\
-a33333 & Nome3 (preencher)
+a78607 & Luís Ferreira
 \end{tabular}
 \end{center}
 
@@ -997,6 +997,82 @@ magicNrs :: Blockchain -> [MagicNo]
 magicNrs = cataBlockchain(either (singl . p1) (uncurry (++) . ((singl . p1) >< id)))
 \end{code}
 
+Diagrama 1.1:
+\begin{itemize}
+\item allTransactions é o catamorfismo de g
+\item BlockTransactions é equivalente á composição da projeção do 2º elemento 2 vezes 
+\end{itemize}
+
+
+\begin{eqnarray*}
+\xymatrix@@C=7cm{
+    |Blockchain|
+           \ar[d]_-{|cataNat g|}
+           \ar[r]^-{|out|}
+&
+    |Block + (Block >< Blockchain)|
+           \ar[d]^{|id + id >< cataNat g|}
+\\
+     |Transactions| 
+&
+     |Block + (Block >< Transactions)|
+           \ar[l]^-{|g = [BlockTransactions, uncurry(++) (BlockTransactions >< id)]|}
+}
+\end{eqnarray*}
+
+Diagrama 1.2.1:
+\begin{eqnarray*}
+\xymatrix@@C=7cm{
+    |Transactions|
+           \ar[d]_-{|cataNat g|}
+           \ar[r]^-{|outList|}
+&
+    |1 + (Transactions >< Transactions)|
+           \ar[d]^{|id + id >< cataNat g|}
+\\
+     |(Entity,Value)*| 
+&
+     |1 + (Transactions >< (Entity,Value)*)|
+           \ar[l]^-{|g = [nil,uncurry(++) . (transactionLedger >< id) ]|}
+}
+\end{eqnarray*}
+
+Diagrama 1.2.2:
+\begin{eqnarray*}
+\xymatrix@@C=7cm{
+    |(Entity,Value)*|
+           \ar[d]_-{|groupby(\ a b ->fst a = = fst b)|}
+\\
+    |((Entity,Value)*)*|
+           \ar[d]^{|map(split (p1.head) (foldr ((+) . p2) (0))) |}
+\\
+    |(Entity,Value)*| 
+}
+\end{eqnarray*}
+
+Diagrama 1.3:
+\begin{eqnarray*}
+\xymatrix@@C=7cm{
+    |Blockchain|
+           \ar[d]_-{|id + id >< magicNrs|}
+           \ar[r]^-{|out|}
+&
+    |Block + (Block >< Blockchain)|
+           \ar[d]^{|id + id >< magicNrs|}
+\\
+     |MagicNo*| 
+           \ar[d]^{|split (length) (length . groupBy(= =))|}
+&
+     |Block + (Block >< (MagicNo)*)|
+           \ar[l]^-{|g = [ singl . p1 , uncurry (++) . ( (singl . p1) >< id  ) ]|}
+\\
+     |Nat0 >< Nat0|
+           \ar[r]^-{|uncurry(= =)|}
+&
+     |Bool|
+}
+\end{eqnarray*}
+
 
 \subsection*{Problema 2}
 
@@ -1017,12 +1093,10 @@ instance Functor QTree where
 
 rotateQTree = cataQTree (inQTree . (((id >< swap)) -|- (split (p1 . p2 . p2) (split (p1) (split (p2 . p2 . p2) (p1 . p2))))))
 scaleQTree x =cataQTree (inQTree . ((id >< ((x *) >< (x *)) -|- (id))))
-invertQTree = fmap (invertPixel) --cataQTree (inQTree . (((invertPixel >< (id)) -|- (id))))
+invertQTree = fmap (invertPixel) 
 invertPixel (PixelRGBA8 a b c d) = (PixelRGBA8 (255-a) (255-b) (255-c) (255-d))
-compressQTree x q = undefined --co2 (depthQTree (q) - x) q
--- co2 :: Int -> (QTree a) -> (QTree a)
--- co2 d = undefined -- inQTree . (id -|- (cond (d==0) (cblock) ((co2 d-1) >< ((co2 d-1)><((co2 d-1)><(co2 d-1)))))) . outQTree
--- cblock a = Cell (PixelRGBA8 (255) (255) (255) (255)) (1) (1)
+compressQTree x q = undefined 
+
 
 
 outlineQTree = undefined
