@@ -740,7 +740,7 @@ square s = rectangleSolid s s
 animatePTree n = animate window white draw
     where
     pics = drawPTree (generatePTree n)
-    draw t = pics !! (floor (t/2))
+    draw t = pics !! (mod (floor (t/2)) (length pics))
 \end{code}
 %endif
 
@@ -1054,8 +1054,9 @@ hyloFTree h g = cataFTree h . anaFTree g
 instance Bifunctor FTree where
     bimap f g = inFTree . (baseFTree f g (bimap f g)) . outFTree
 
-generatePTree = anaFTree (cond (== 0) (i1 . uncurry (**) . split (const (sqrt (2.0)/2.0)) ((1 -). toFloat . id)) (i2 .split(  uncurry (**) . split (const (sqrt (2.0)/2.0)) ((1 -). toFloat . id)) (split (pred) (pred)))) 
-drawPTree = const [pictures[polygon [(-1,-1),(1,-1),(1,1),(-1,1)]]]--
+generatePTree = anaFTree (cond (== 0) (i1 . calculateSize) (i2 . split (calculateSize) (split (pred) (pred)))) 
+calculateSize = uncurry (**) . split (const (sqrt (2.0)/2.0)) ((1 -). toFloat . id)
+drawPTree a =  [rectangleSolid 1.0 1.0]
 
 \end{code}
 
