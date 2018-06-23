@@ -1322,10 +1322,24 @@ fk . in = either (Succ . const K) (Succ . p2) . F(split(fk) (lk))
 \just\equiv{ Lei da Troca , Lei da Troca}
 %
   |cataNat(split (either (split (const 1) (Succ . const K)) (split (mul) (Succ . p2)). (id + p1)) (either (split (const 1) (const 1)) (split (mul) (Succ . p2)) . (id + p2) ) )|
+%
+\just\equiv{ Absorcao x2 , Natura ID x2}
+%
+  |cataNat(split (either (split (const 1)(Succ . const K))(split (mul)(Succ . p2) . p1))(either (split (const 1)(const 1))(split (mul)(Succ . p2) . p2)))|
+%
+\just\equiv{ Lei da Troca}
+%
+  |cataNat(either (split (split(const 1) (Succ . const K))(split (const 1) (const 1)))(split (split (mul) (Succ .  p2) . p1) (split (mul) (Succ . p2) . p2))|
+%
+\just\equiv{ Def x , Fusao, Const}
+%
+  |cataNat(either (split (split(const 1) (Succ . const K))(split (const 1) (const 1)))(split(mul) (Succ .  p2) >< (split (mul) (Succ . p2)))|
 
 \qed
 \end{eqnarray*}
 
+|Como (for a b) = cataNat(either (const b) (const a))|
+Sendo a = loop e b = base k, e visto que a funcão recebe e devolve par de pares, mas a funcão original requer tuplos de 4 elementos, foi necessário recorrer às funcões pair e unpair para alternar entre duas estruturas isomórficas.
 \subsection*{Problema 4}
 
 \begin{code}
@@ -1344,7 +1358,7 @@ instance Bifunctor FTree where
     bimap f g = inFTree . (baseFTree f g (bimap f g)) . outFTree
 
 generatePTree = anaFTree (cond (== 0) (i1 . calculateSize) (i2 . split (calculateSize) (split (pred) (pred))))
-calculateSize = (50 *) . uncurry (**) . split (const (sqrt (2.0)/2.0)) ((1 -). toFloat . id)
+calculateSize = (10 *) . uncurry (**) . split (const (sqrt (2.0)/2.0)) ((1 -). toFloat . id)
 drawPTree =  cataFTree(either (singl.square) (uncurry (++) . split (p2.p2)(singl.pictures . cons . split (square . p1) (uncurry (++) . split (singl . leftSide) (singl.rightSide)))))
 
 leftSide = uncurry(uncurry (translate)) . split (split (((-1 / 2) *) . p1) (p1)) ((rotate (-45)) . last . p1. p2)
