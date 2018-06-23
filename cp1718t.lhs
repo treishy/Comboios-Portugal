@@ -1427,7 +1427,7 @@ Diagram 4.2.2 :: como é calculado e posicionada a picture da metade esquerda (l
      &
 }
 \end{eqnarray*}
-Fazendo o split das duas operações acima, obtemos :  (R >< R) >< Picture. A seguir aplicamos a translação : 
+Fazendo o split das duas operações acima, obtemos :  (R \times R) \times Picture. A seguir aplicamos a translação : 
 \begin{eqnarray*}
 \xymatrix@@C=2cm{
     |R >< R >< Picture |
