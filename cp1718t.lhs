@@ -1175,7 +1175,7 @@ s . in = either (const 1) (succ . p2) . F(split (q) (s))
 )|
 \just\equiv{ Fokkinga }
 %
-        |split g s = cata (split(either (const 1) (mul))(either (const 1) (Succ . p2)))|
+        |split g s = cataNat (split(either (const 1) (mul))(either (const 1) (Succ . p2)))|
 %
 \qed
 \end{eqnarray*}
@@ -1280,7 +1280,27 @@ fk . in = either (Succ . const K) (Succ . p2) . F(split(fk) (lk))
 )|
 \just\equiv{ Fokkinga }
 %
-  |split (fk) (lk) = cata(either (either (const 1) (mul)) (either (Succ . const K) (Succ . p2)))|
+  |split (fk) (lk) = cataNat (either (either (const 1) (mul)) (either (Succ . const K) (Succ . p2)))|
+
+\qed
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\start
+%
+|split (cataNat (split(either(const 1) (mul))(either (Succ . const K) (Succ . p2)))) (cataNat(split (either (const 1) (mul)) (either (const 1) (succ . p2))))|
+%
+\just\equiv{ bananaSplit }
+%
+  |cataNat(split (either (const 1) (mul))(either (Succ . const K) (Succ . p2)) >< split(either (const 1) (mul))(either (Succ . const K) (Succ . p2)) . split (id + p1) (id + p2) )|
+%
+\just\equiv{ Absorcao }
+%
+  |cataNat(split(split (either (const 1) (mul))(either (Succ . const K) (Succ . p2)) . (id + p1))(split (either (const 1) (mul)) (either (const 1) (Succ . p2)) . (id + p2)))|
+%
+\just\equiv{ Lei da Troca , Lei da Troca}
+%
+  |cataNat(split (either (split (const 1) (Succ . const K)) (split (mul) (Succ . p2)). (id + p1)) (either (split (const 1) (const 1)) (split (mul) (Succ . p2)) . (id + p2) ) )|
 
 \qed
 \end{eqnarray*}
