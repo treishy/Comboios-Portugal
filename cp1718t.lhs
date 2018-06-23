@@ -1054,7 +1054,7 @@ hyloFTree h g = cataFTree h . anaFTree g
 instance Bifunctor FTree where
     bimap f g = inFTree . (baseFTree f g (bimap f g)) . outFTree
 
-generatePTree = anaFTree (cond (== 0) (i1 . (5*) . uncurry (**) . split (const (sqrt (2.0)/2.0)) ((5 -). toFloat . id)) (i2 .split( (5*) . uncurry (**) . split (const (sqrt (2.0)/2.0)) ((5 -). toFloat . id)) (split (pred) (pred)))) 
+generatePTree = anaFTree (cond (== 0) (i1 . uncurry (**) . split (const (sqrt (2.0)/2.0)) ((1 -). toFloat . id)) (i2 .split(  uncurry (**) . split (const (sqrt (2.0)/2.0)) ((1 -). toFloat . id)) (split (pred) (pred)))) 
 drawPTree = undefined
 \end{code}
 
