@@ -1123,6 +1123,27 @@ Diagram 2.1:
 }
 \end{eqnarray*}
 
+Diagram 2.2:
+\begin{itemize}
+  \item $aux = rotateQTree \times (rotateQTree \times (rotateQTree \times rotateQTree))$
+  \item $D = QTree A><(QTree A><(QTree A><QTree A))$
+\end{itemize}
+\begin{eqnarray*}
+\xymatrix@@C=7cm{
+    |QTree A|
+           \ar[d]_-{|scaleQTree|}
+           \ar[r]^-{|out|}
+&
+    |A+Int><Int+D|
+           \ar[d]^{|id><id+aux|}
+\\
+     |QTree A| 
+&
+     |A+Int><Int+D|
+           \ar[l]^-{|g= inQTree . [i1 . (id >< ((x *) >< (x *))), i2.id] |}
+}
+\end{eqnarray*}
+
 \subsection*{Problema 3}
 
 \begin{code}
@@ -1154,6 +1175,23 @@ calculateSize = uncurry (**) . split (const (sqrt (2.0)/2.0)) ((1 -). toFloat . 
 drawPTree a =  [rectangleSolid 1.0 1.0]
 
 \end{code}
+
+Diagram 4.1:
+\begin{eqnarray*}
+\xymatrix@@C=7cm{
+    |FTree R R|    
+&
+    |1 + R >< (FTree R R  >< FTree R R)|
+           \ar[l]^-{|in|}
+\\
+     |Z| 
+           \ar[u]_-{|generatorPTree|}
+           \ar[r]^-{|(0 = =) --> (i1 . calculateSize),(i2 . split (calculateSize)(split (pred)(pred)) |}
+&
+     |R + R >< (Z >< Z)|
+           \ar[u]^{|F generatorPTree|}
+}
+\end{eqnarray*}
 
 \subsection*{Problema 5}
 
