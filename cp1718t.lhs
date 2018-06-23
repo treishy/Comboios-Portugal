@@ -1026,15 +1026,15 @@ compressQTree x q = undefined --co2 (depthQTree (q) - x) q
 
 outQTreeDepth = (outQTree) >< id
 recQTreeDepth f = ((id >< id) -|- (f >< (f >< (f >< f)))) >< pred
-cataQTreeDepth g = undefined--g . (recQTreeDepth (cataQTreeDepth g)) . outQTreeDepth
+cataQTreeDepth g = g . (recQTreeDepth (cataQTreeDepth g)) . outQTreeDepth
 outlineQTree = undefined
 \end{code}
 
 \subsection*{Problema 3}
 
 \begin{code}
-base k = (1,k+1,1,1) 
-loop  = unpair . ((split (mul) (succ.p2)) >< (split (mul) (succ.p2))) . pair --(a * b,b+1,c*d,d+1) 
+base k = (1,k+1,1,1)
+loop  = unpair . ((split (mul) (succ.p2)) >< (split (mul) (succ.p2))) . pair --(a * b,b+1,c*d,d+1)
 pair (a,b,c,d) = ((a,b),(c,d))
 unpair((a,b),(c,d)) = (a,b,c,d)
 \end{code}
@@ -1054,7 +1054,7 @@ anaFTree g = inFTree . recFTree (anaFTree g) . g
 hyloFTree h g = cataFTree h . anaFTree g
 
 instance Bifunctor FTree where
-    bimap = undefined
+    bimap f g = inFTree . (baseFTree f g (bimap f g)) . outFTree
 
 generatePTree = undefined
 drawPTree = undefined
