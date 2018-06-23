@@ -1055,11 +1055,8 @@ instance Bifunctor FTree where
     bimap f g = inFTree . (baseFTree f g (bimap f g)) . outFTree
 
 generatePTree = anaFTree (cond (== 0) (i1 . uncurry (**) . split (const (sqrt (2.0)/2.0)) ((1 -). toFloat . id)) (i2 .split(  uncurry (**) . split (const (sqrt (2.0)/2.0)) ((1 -). toFloat . id)) (split (pred) (pred)))) 
-drawPTree = undefined--
-testSquare =  animate window white draw
-    where
-    pics = [pictures[polygon [(-1,-1),(1,-1),(1,1),(-1,1)]]]
-    draw t = pics !! (floor (t/2))
+drawPTree = const [pictures[polygon [(-1,-1),(1,-1),(1,1),(-1,1)]]]--
+
 \end{code}
 
 \subsection*{Problema 5}
